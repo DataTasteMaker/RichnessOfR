@@ -1,0 +1,81 @@
+---
+title: "kmeans_with_prediction"
+author: "Viraj @DataTasteMaker"
+date: "March 29, 2016"
+output: pdf_document
+---
+
+k-means clustering and predicting:
+
+**Clear memory**
+```{r}
+rm(list=  ls())
+```
+
+**Load *iris* data**
+
+```{r}
+set.seed(1) # to get same output everytime
+ipdata <- iris[,-5]
+head(ipdata)
+```
+```{r,echo=FALSE}
+cat("Original iris data")
+head(iris)
+```
+
+**Run k-means with 3 clusters as *iris* data has 3 segments**
+```{r}
+km <- kmeans(ipdata,3)
+```
+
+**See how the means/centers are for each cluster**
+```{r}
+km$centers
+```
+
+**Create a list of new values to predict**
+```{r}
+# new data record values
+myvalues <- c(5.1,3.5,1.4,0.2) # here I have used the first record values
+```
+
+**now extract mean values for each cluster, then find the Euclidean distance of each values with the new values**
+```{r}
+model_cluster1 <- km$centers[1,]
+model_cluster2 <- km$centers[2,]
+model_cluster3 <- km$centers[3,]
+
+ed_cluster1 <- sqrt(sum((model_cluster1 - myvalues)^2))
+ed_cluster2 <- sqrt(sum((model_cluster2 - myvalues)^2))
+ed_cluster3 <- sqrt(sum((model_cluster3 - myvalues)^2))
+```
+
+**The distances for each clusters are as below**
+```{r}
+cat("The distances are", ed_cluster1, ed_cluster2, ed_cluster3)
+```
+
+**Now find the minimum value of the 3 distances, the one with the minimum value is the cluster this new data will be falling into**
+```{r}
+cat("The new record withe values -->", myvalues, " will fall into cluster# = ",
+which.min(as.list(c(ed_cluster1,ed_cluster2,ed_cluster3))))
+```
+
+**To cross validate our model we can do it as below**
+```{r}
+## As I had pulled the first record of the data file, let's see which segment it was marked in
+
+iris[1,]
+## as you see the cluster it is marked in is "setosa"
+## and as per the table below, the kmeans model is setting Cluster 1 as Setosa
+table(iris$Species,km$cluster)
+plot(ipdata[c(1:2)], col=km$cluster, pch=19)
+```
+
+
+
+
+
+
+
