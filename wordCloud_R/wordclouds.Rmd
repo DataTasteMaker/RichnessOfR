@@ -1,0 +1,42 @@
+---
+title: "WordCloud"
+author: "Viraj @DataTasteMaker"
+date: "March 28, 2016"
+output: pdf_document
+---
+
+This script creates a word cloud, by reading the CSV file which has words and its frequencies as per the requirement.
+
+The script is not actually reading any text, to extract the words and the frequency of those words, instead that info is manually entered in the *"wrdCloud_data.csv"* file.
+
+This *"wrdCloud_data.csv"* file is then read in and the names and frequencies are passed to the wordcloud function to generate the requried image.
+
+
+**Always clear the environment and plots to free up the memory, before starting.**
+```{r, echo=FALSE}
+rm(list = ls())
+dev.off()
+```
+
+
+**Load the required libraries, you might have to install them if not already**
+```{r}
+library(RColorBrewer) # This is required for wordcloud library
+library(wordcloud)
+```
+
+
+**Read the CSV file and view the data if all corret**
+```{r, echo=FALSE}
+wrdCloud  <- read.csv("./datasets/wrdCloud_data.csv", sep = ",")
+wrdCloud[,c(1:10)]
+```
+
+**Now call the wordcloud function and pass the data frame and other parameters**
+```{r}
+wordcloud(
+  names(wrdCloud), wrdCloud, min.freq = 10,
+  colors = brewer.pal(8, "Set1"),scale = c(1.7, 0.1)
+)
+```
+
